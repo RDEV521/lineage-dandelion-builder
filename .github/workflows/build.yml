@@ -37,7 +37,7 @@ jobs:
 
     - name: LineageOS Kaynak Kodlarını İndir ve Cihaz Ağaçlarını Klonla
       run: |
-        # Hatalı/gizli linklerde şifre sormasını külliyen engellemek için tokenı sisteme gömüyoruz
+        # Şifre sorma hatalarını engellemek için tokenı sisteme gömüyoruz
         git config --global url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
 
         mkdir android
@@ -49,11 +49,11 @@ jobs:
         # Ana ROM kodlarını indir
         repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
         
-        # Sürücüleri ve ağaçları çekiyoruz
+        # Sürücüleri ve cihaz ağacını çekiyoruz
         git clone https://github.com/RDEV521/android_device_xiaomi_dandelion.git device/xiaomi/dandelion
         
-        # KERNEL: Doğru ve var olan resmi LineageOS kernel reposunu çekiyoruz (mt6768 ortak ağacı)
-        git clone https://github.com/LineageOS/android_kernel_xiaomi_mt6768.git -b lineage-18.1 kernel/xiaomi/dandelion
+        # KERNEL: linege-18.1 dalı (branch) kesin olan uyumlu repoyu çekiyoruz
+        git clone https://github.com/RDEV521/android_kernel_xiaomi_mt6765.git -b lineage-18.1 kernel/xiaomi/dandelion
         
         # VENDOR: Şifre sormayan açık havuzdan çekiyoruz
         mkdir -p vendor/xiaomi
