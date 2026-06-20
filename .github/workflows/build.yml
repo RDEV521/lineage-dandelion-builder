@@ -24,7 +24,7 @@ jobs:
     - name: Gerekli Paketlerin Kurulması
       run: |
         sudo apt-get update
-        sudo apt-get install -y gperf gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip bc ccache libncurses5-dev bison flex libssl-dev libelf-dev python3-pip zip
+        sudo apt-get install -y gperf gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip bc ccache libncurses5-dev bison flex libssl-dev libelf-dev python3-pip zip subversion
         mkdir -p ~/bin
         curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
         chmod a+x ~/bin/repo
@@ -43,13 +43,16 @@ jobs:
         # Ana ROM tabanını initialize et
         repo init -u https://github.com/LineageOS/android.git -b lineage-18.1 --depth=1
         
-        # Ana ROM kodlarını indir (Cihaz ağaçları hariç)
+        # Ana ROM kodlarını indir
         repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
         
-        # ŞİMDİ SİHİRLİ DOKUNUŞ: Klasörleri yaratıp çalışan public repoları klonluyoruz!
+        # Sürücüleri ve ağaçları çekiyoruz
         git clone https://github.com/RDEV521/android_device_xiaomi_dandelion.git device/xiaomi/dandelion
-        git clone https://github.com/TheMuppets/proprietary_vendor_xiaomi.git -b lineage-18.1 vendor/xiaomi/dandelion
         git clone https://github.com/muralivijay-dev/android_kernel_xiaomi_mt6765.git kernel/xiaomi/dandelion
+        
+        # VENDOR HİLESİ: Şifre sormasın diye sadece dandelion klasörünü indirip tam yerine koyuyoruz
+        mkdir -p vendor/xiaomi
+        svn export https://github.com/TheMuppets/proprietary_vendor_xiaomi/branches/lineage-18.1/dandelion vendor/xiaomi/dandelion
 
     - name: Derlemeyi Başlat
       run: |
