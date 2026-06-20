@@ -49,11 +49,11 @@ jobs:
         # Ana ROM kodlarını indir
         repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
         
-        # Sürücüleri ve cihaz ağacını çekiyoruz
+        # SÜRÜCÜLER (Senin kendi cihaz ağacın, resim.png'de gördüğümüz repo)
         git clone https://github.com/RDEV521/android_device_xiaomi_dandelion.git device/xiaomi/dandelion
         
-        # KERNEL: linege-18.1 dalı (branch) kesin olan uyumlu repoyu çekiyoruz
-        git clone https://github.com/RDEV521/android_kernel_xiaomi_mt6765.git -b lineage-18.1 kernel/xiaomi/dandelion
+        # KERNEL: Şu an aktif ve dandelion 18.1 ile birebir uyumlu çalışan açık kaynak havuz
+        git clone https://github.com/bengris32/android_kernel_xiaomi_mt6765.git -b lineage-18.1 kernel/xiaomi/dandelion
         
         # VENDOR: Şifre sormayan açık havuzdan çekiyoruz
         mkdir -p vendor/xiaomi
