@@ -32,14 +32,14 @@ jobs:
 
     - name: Git Ayarlarını Yap
       run: |
-        git config --global user.name "Bro Builder"
-        git config --global user.email "bro@example.com"
+        git config --global user.name "Efelowlevelhehe Builder"
+        git config --global user.email "rvn@example.com"
 
     - name: LineageOS Kaynak Kodlarını İndir
       run: |
         mkdir android
         cd android
-        repo init -u https://github.com/LineageOS/android.git -b lineage-18.1 --git-lfs-depth=1
+        repo init -u https://github.com/LineageOS/android.git -b lineage-18.1 --depth=1
         
         mkdir -p .repo/local_manifests
         echo '<?xml version="1.0" encoding="UTF-8"?>
