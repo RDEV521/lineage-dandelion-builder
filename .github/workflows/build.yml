@@ -46,10 +46,10 @@ jobs:
         # Ana ROM kodlarını indir (Cihaz ağaçları hariç)
         repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
         
-        # ŞİMDİ SİHİRLİ DOKUNUŞ: Klasörleri elle yaratıp senin repoları zorla klonluyoruz!
+        # ŞİMDİ SİHİRLİ DOKUNUŞ: Klasörleri yaratıp çalışan public repoları klonluyoruz!
         git clone https://github.com/RDEV521/android_device_xiaomi_dandelion.git device/xiaomi/dandelion
-        git clone https://github.com/Muralivijay/android_vendor_xiaomi_dandelion.git vendor/xiaomi/dandelion
-        git clone https://github.com/Muralivijay/android_kernel_xiaomi_dandelion.git kernel/xiaomi/dandelion
+        git clone https://github.com/TheMuppets/proprietary_vendor_xiaomi.git -b lineage-18.1 vendor/xiaomi/dandelion
+        git clone https://github.com/muralivijay-dev/android_kernel_xiaomi_mt6765.git kernel/xiaomi/dandelion
 
     - name: Derlemeyi Başlat
       run: |
