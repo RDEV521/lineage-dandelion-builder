@@ -35,21 +35,21 @@ jobs:
         git config --global user.name "Efelowlevelhehe Builder"
         git config --global user.email "rvn@example.com"
 
-    - name: LineageOS Kaynak Kodlarını İndir
+    - name: LineageOS Kaynak Kodlarını İndir ve Cihaz Ağaçlarını Klonla
       run: |
         mkdir android
         cd android
+        
+        # Ana ROM tabanını initialize et
         repo init -u https://github.com/LineageOS/android.git -b lineage-18.1 --depth=1
         
-        mkdir -p .repo/local_manifests
-        echo '<?xml version="1.0" encoding="UTF-8"?>
-        <manifest>
-          <project name="RDEV521/android_device_xiaomi_dandelion" path="device/xiaomi/dandelion" remote="github" />
-          <project name="Muralivijay/android_vendor_xiaomi_dandelion" path="vendor/xiaomi/dandelion" remote="github" />
-          <project name="Muralivijay/android_kernel_xiaomi_dandelion" path="kernel/xiaomi/dandelion" remote="github" />
-        </manifest>' > .repo/local_manifests/roomservice.xml
-        
+        # Ana ROM kodlarını indir (Cihaz ağaçları hariç)
         repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+        
+        # ŞİMDİ SİHİRLİ DOKUNUŞ: Klasörleri elle yaratıp senin repoları zorla klonluyoruz!
+        git clone https://github.com/RDEV521/android_device_xiaomi_dandelion.git device/xiaomi/dandelion
+        git clone https://github.com/Muralivijay/android_vendor_xiaomi_dandelion.git vendor/xiaomi/dandelion
+        git clone https://github.com/Muralivijay/android_kernel_xiaomi_dandelion.git kernel/xiaomi/dandelion
 
     - name: Derlemeyi Başlat
       run: |
