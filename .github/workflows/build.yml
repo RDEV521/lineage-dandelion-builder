@@ -1,0 +1,68 @@
+name: Redmi 10A LineageOS Derleyici
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+
+    steps:
+    - name: Depolama Alanını Temizle
+      uses: jlumbroso/free-disk-space@v1.3.1
+      with:
+        tool-cache: false
+        android: true
+        dotnet: true
+        haskell: true
+        large-packages: true
+        docker-images: true
+        swap-storage: true
+
+    - name: Gerekli Paketlerin Kurulması
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gperf gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip bc ccache libncurses5-dev bison flex libssl-dev libelf-dev python3-pip zip
+        mkdir -p ~/bin
+        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+        chmod a+x ~/bin/repo
+        sudo ln -sf ~/bin/repo /usr/bin/repo
+
+    - name: Git Ayarlarını Yap
+      run: |
+        git config --global user.name "Bro Builder"
+        git config --global user.email "bro@example.com"
+
+    - name: LineageOS Kaynak Kodlarını İndir
+      run: |
+        mkdir android
+        cd android
+        repo init -u https://github.com/LineageOS/android.git -b lineage-18.1 --git-lfs-depth=1
+        
+        mkdir -p .repo/local_manifests
+        echo '<?xml version="1.0" encoding="UTF-8"?>
+        <manifest>
+          <project name="RDEV521/android_device_xiaomi_dandelion" path="device/xiaomi/dandelion" remote="github" revision="lineage-18.1" />
+          <project name="Muralivijay/android_vendor_xiaomi_dandelion" path="vendor/xiaomi/dandelion" remote="github" revision="lineage-18.1" />
+          <project name="Muralivijay/android_kernel_xiaomi_dandelion" path="kernel/xiaomi/dandelion" remote="github" revision="lineage-18.1" />
+        </manifest>' > .repo/local_manifests/roomservice.xml
+        
+        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
+    - name: Derlemeyi Başlat
+      run: |
+        cd android
+        export USE_CCACHE=1
+        export CCACHE_EXEC=/usr/bin/ccache
+        ccache -M 50G
+        source build/envsetup.sh
+        lunch lineage_dandelion-userdebug
+        mka bacon -j$(nproc --all)
+
+    - name: ROM Dosyasını Yükle
+      uses: actions/upload-artifact@v4
+      with:
+        name: LineageOS-Dandelion-Build
+        path: android/out/target/product/dandelion/*.zip
