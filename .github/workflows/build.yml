@@ -44,9 +44,9 @@ jobs:
         mkdir -p .repo/local_manifests
         echo '<?xml version="1.0" encoding="UTF-8"?>
         <manifest>
-          <project name="RDEV521/android_device_xiaomi_dandelion" path="device/xiaomi/dandelion" remote="github" revision="android-11" />
-          <project name="Muralivijay/android_vendor_xiaomi_dandelion" path="vendor/xiaomi/dandelion" remote="github" revision="lineage-18.1" />
-          <project name="Muralivijay/android_kernel_xiaomi_dandelion" path="kernel/xiaomi/dandelion" remote="github" revision="lineage-18.1" />
+          <project name="RDEV521/android_device_xiaomi_dandelion" path="device/xiaomi/dandelion" remote="github" revision="11" />
+          <project name="Muralivijay/android_vendor_xiaomi_dandelion" path="vendor/xiaomi/dandelion" remote="github" revision="11.0" />
+          <project name="Muralivijay/android_kernel_xiaomi_dandelion" path="kernel/xiaomi/dandelion" remote="github" revision="11.0" />
         </manifest>' > .repo/local_manifests/roomservice.xml
         
         repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
